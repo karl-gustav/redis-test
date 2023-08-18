@@ -21,7 +21,7 @@ func New(ctx context.Context, redisClient *redis.Client, logger *zap.Logger) *Re
 		redisClient:       redisClient,
 		deviceSubscribers: make(map[string][]chan []byte),
 		mu:                &sync.Mutex{},
-		pubsub:            redisClient.Subscribe(ctx, "lsdk"), // empty subscription
+		pubsub:            redisClient.Subscribe(ctx, "stromme/han/live/RygX3luy"), // empty subscription
 		logger:            logger,
 	}
 }
