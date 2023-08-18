@@ -21,7 +21,7 @@ func New(ctx context.Context, redisClient *redis.Client, logger *zap.Logger) *Re
 		redisClient:       redisClient,
 		deviceSubscribers: make(map[string][]chan []byte),
 		mu:                &sync.Mutex{},
-		pubsub:            redisClient.Subscribe(ctx, "stromme/han/live/RygX3luy"), // empty subscription
+		pubsub:            redisClient.Subscribe(ctx), // empty subscription
 		logger:            logger,
 	}
 }
@@ -31,7 +31,7 @@ func (r *RedisBroker) Subscribe(ctx context.Context, channelID string) chan []by
 	r.mu.Lock()
 	r.deviceSubscribers[channelID] = append(r.deviceSubscribers[channelID], deviceChannel)
 	r.mu.Unlock()
-	r.redisClient.Subscribe(ctx, channelID)
+	r.pubsub.Subscribe(ctx, channelID)
 	r.logger.Debug("subscribe pubsub", zap.String("channelID", channelID), zap.Int("number of subscribers for deviceID", len(r.deviceSubscribers[channelID])), zap.Int("number of devices subscribed", len(r.deviceSubscribers)))
 	return deviceChannel
 }
